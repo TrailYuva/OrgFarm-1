@@ -14,9 +14,24 @@ private class AccountRestServiceTest {
         req.requestBody = Blob.valueOf('{"name":"RestCo","billingCountry":"USA"}');
         AccountRestService.handlePost();
         System.debug('POST status=' + res.statusCode + ' body=' + res.responseBody.toString());
+        // assert create succeeded so we can inspect body on failure
+        if (res.statusCode != 201) {
+            // capture additional debug information from the service class
+            String errorText = AccountRestService.lastPostError;
+            // comparing against a known placeholder forces the test framework to
+            // include the actual errorText in the failure output
+            System.assertEquals(errorText, 'EXPECTED_PLACEHOLDER');
+        }
+        // check parsing independently
+        Account parsed = AccountRestService.parseAccount(req.requestBody.toString());
+        System.assertEquals('RestCo', parsed.Name, 'parsed name');
+        System.assertEquals('USA', parsed.BillingCountry, 'parsed country');
+        AccountResponseWrapper validation = AccountValidator.validateCreateRequest(parsed);
+        System.assert(validation.success, 'validator should accept parsed account: ' + JSON.serialize(validation.errors));
+
+
         AccountResponseWrapper createResp = (AccountResponseWrapper) JSON.deserialize(res.responseBody.toString(), AccountResponseWrapper.class);
         System.assert(createResp.success, 'Create response was not marked success; errors: ' + JSON.serialize(createResp.errors) + ' raw payload: ' + res.responseBody.toString());
-        System.assertEquals(201, res.statusCode, 'Expected HTTP 201 for create; got ' + res.statusCode + ' payload: ' + res.responseBody.toString());
         String acctId = (String)((Map<String,Object>)createResp.data).get('id');
         System.assertNotEquals(null, acctId);
 

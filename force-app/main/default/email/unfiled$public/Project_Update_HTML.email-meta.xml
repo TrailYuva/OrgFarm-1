@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>unfiled$public/Project_Update_HTML</fullName>
+    <name>Project_Update_HTML</name>
+    <subject>Project Update Notification</subject>
+    <type>custom</type>
+    <available>true</available>
+    <encodingKey>UTF-8</encodingKey>
+    <style>none</style>
+</EmailTemplate>

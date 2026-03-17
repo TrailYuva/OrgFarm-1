@@ -60,7 +60,10 @@ public class AccountValidator {
         AccountResponseWrapper resp = new AccountResponseWrapper();
         resp.success = true;
 
-        if (String.isBlank(accountId) || (accountId.length() != 15 && accountId.length() != 18)) {
+        // normalize/trim the id and verify characters, helps when the URL
+        // encoding or client padding introduces stray characters.
+        String cleanedId = accountId != null ? accountId.trim() : accountId;
+        if (String.isBlank(cleanedId) || !Pattern.matches('^[a-zA-Z0-9]{15}|[a-zA-Z0-9]{18}$', cleanedId)) {
             resp.success = false;
             resp.errors.add(new AccountResponseWrapper.ErrorDetail('INVALID_FIELD_VALUE', 'Invalid account ID format', 'id'));
             return resp;
@@ -89,7 +92,8 @@ public class AccountValidator {
         AccountResponseWrapper resp = new AccountResponseWrapper();
         resp.success = true;
 
-        if (String.isBlank(accountId) || (accountId.length() != 15 && accountId.length() != 18)) {
+        String cleanedId = accountId != null ? accountId.trim() : accountId;
+        if (String.isBlank(cleanedId) || !Pattern.matches('^[a-zA-Z0-9]{15}|[a-zA-Z0-9]{18}$', cleanedId)) {
             resp.success = false;
             resp.errors.add(new AccountResponseWrapper.ErrorDetail('INVALID_FIELD_VALUE', 'Invalid account ID format', 'id'));
             return resp;

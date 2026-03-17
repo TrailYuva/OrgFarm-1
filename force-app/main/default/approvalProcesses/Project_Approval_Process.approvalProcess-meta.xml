@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Approval_Process</fullName>
+    <label>Project Approval Process</label>
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Status__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <assignedApprover>
+            <approver>
+                <type>userHierarchyField</type>
+            </approver>
+        </assignedApprover>
+        <label>Step 1</label>
+        <name>Step_1</name>
+        <rejectBehavior>RejectRequest</rejectBehavior>
+        <approvalActions>
+        </approvalActions>
+        <rejectionActions>
+        </rejectionActions>
+    </approvalStep>
+    <finalApprovalActions>
+    </finalApprovalActions>
+    <finalRejectionActions>
+    </finalRejectionActions>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>true</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <processOrder>1</processOrder>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

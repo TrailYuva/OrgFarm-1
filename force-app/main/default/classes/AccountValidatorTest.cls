@@ -34,5 +34,12 @@ private class AccountValidatorTest {
         System.assert(!res.success);
         res = AccountValidator.validateDeleteRequest('abc');
         System.assert(!res.success);
+
+        // trimmed id should be accepted
+        String validId = '001gL00000hKtnbQAC';
+        res = AccountValidator.validateUpdateRequest('  ' + validId + '\n', new Account());
+        System.assert(res.success, 'Trimmed ID should pass validation');
+        res = AccountValidator.validateDeleteRequest('\t' + validId + ' ');
+        System.assert(res.success, 'Trimmed ID should pass delete validation');
     }
 }

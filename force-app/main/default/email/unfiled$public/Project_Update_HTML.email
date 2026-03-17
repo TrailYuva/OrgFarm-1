@@ -1,0 +1,6 @@
+<html>
+  <body>
+    <p>There is a new update for Project {!Project__c.ProjectName__c}.</p>
+    <p>Current status: {!Project__c.Status__c}. Please review and take action as needed.</p>
+  </body>
+</html>

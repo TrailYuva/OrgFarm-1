@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ProjectNameRequired</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISBLANK(ProjectName__c)</errorConditionFormula>
+    <errorDisplayField>ProjectName__c</errorDisplayField>
+    <errorMessage>Project Name is required.</errorMessage>
+</ValidationRule>

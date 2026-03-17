@@ -266,8 +266,11 @@ public class AccountValidator {
         AccountResponseWrapper response = new AccountResponseWrapper();
         response.success = true;
         
-        // Validate account ID
-        if (String.isBlank(accountId) || accountId.length() != 18) {
+        // Validate account ID: trim and ensure 15/18 alphanumeric characters
+        // (REST layer will decode percent-encoded segments before calling
+        // this method).
+        if (String.isBlank(accountId) ||
+            !Pattern.matches('^[a-zA-Z0-9]{15}|[a-zA-Z0-9]{18}$', accountId.trim())) {
             response.success = false;
             response.errors.add(new AccountResponseWrapper.ErrorDetail(
                 'INVALID_FIELD_VALUE',
@@ -305,8 +308,9 @@ public class AccountValidator {
         AccountResponseWrapper response = new AccountResponseWrapper();
         response.success = true;
         
-        // Validate account ID
-        if (String.isBlank(accountId) || accountId.length() != 18) {
+        // Validate account ID (same rules as update)
+        if (String.isBlank(accountId) ||
+            !Pattern.matches('^[a-zA-Z0-9]{15}|[a-zA-Z0-9]{18}$', accountId.trim())) {
             response.success = false;
             response.errors.add(new AccountResponseWrapper.ErrorDetail(
                 'INVALID_FIELD_VALUE',

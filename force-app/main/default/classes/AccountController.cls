@@ -54,7 +54,7 @@ public class AccountController {
             if (String.isBlank(sortBy)) sortBy = 'LastModifiedDate';
             if (String.isBlank(sortOrder)) sortOrder = 'DESC';
 
-            String queryFields = String.isBlank(fields) ? 'Id, Name, Phone, Website, Industry, BillingCountry, CreatedDate, LastModifiedDate' : fields;
+            String queryFields = String.isBlank(fields) ? 'Id, Name, Phone, Website, Industry, AnnualRevenue, NumberOfEmployees, BillingStreet, BillingCity, BillingStateCode, BillingPostalCode, BillingCountry, ShippingStreet, ShippingCity, ShippingStateCode, ShippingPostalCode, ShippingCountry, Description, CreatedDate, LastModifiedDate, CreatedById' : fields;
             String whereClause = 'WHERE Id != null';
 
             if (String.isNotBlank(search)) {
@@ -166,27 +166,29 @@ public class AccountController {
 
     private static Map<String, Object> convertAccountToMap(Account acc) {
         Map<String, Object> m = new Map<String, Object>();
-        m.put('id', acc.Id);
-        m.put('name', acc.Name);
-        m.put('phone', acc.Phone);
-        m.put('website', acc.Website);
-        m.put('industry', acc.Industry);
-        m.put('annualRevenue', acc.AnnualRevenue);
-        m.put('numberOfEmployees', acc.NumberOfEmployees);
-        m.put('billingStreet', acc.BillingStreet);
-        m.put('billingCity', acc.BillingCity);
-        m.put('billingStateCode', acc.BillingStateCode);
-        m.put('billingPostalCode', acc.BillingPostalCode);
-        m.put('billingCountry', acc.BillingCountry);
-        m.put('shippingStreet', acc.ShippingStreet);
-        m.put('shippingCity', acc.ShippingCity);
-        m.put('shippingStateCode', acc.ShippingStateCode);
-        m.put('shippingPostalCode', acc.ShippingPostalCode);
-        m.put('shippingCountry', acc.ShippingCountry);
-        m.put('description', acc.Description);
-        m.put('createdDate', acc.CreatedDate != null ? acc.CreatedDate.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'') : null);
-        m.put('lastModifiedDate', acc.LastModifiedDate != null ? acc.LastModifiedDate.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'') : null);
-        m.put('createdById', acc.CreatedById);
+        m.put('id', acc.get('Id'));
+        m.put('name', acc.get('Name'));
+        m.put('phone', acc.get('Phone'));
+        m.put('website', acc.get('Website'));
+        m.put('industry', acc.get('Industry'));
+        m.put('annualRevenue', acc.get('AnnualRevenue'));
+        m.put('numberOfEmployees', acc.get('NumberOfEmployees'));
+        m.put('billingStreet', acc.get('BillingStreet'));
+        m.put('billingCity', acc.get('BillingCity'));
+        m.put('billingStateCode', acc.get('BillingStateCode'));
+        m.put('billingPostalCode', acc.get('BillingPostalCode'));
+        m.put('billingCountry', acc.get('BillingCountry'));
+        m.put('shippingStreet', acc.get('ShippingStreet'));
+        m.put('shippingCity', acc.get('ShippingCity'));
+        m.put('shippingStateCode', acc.get('ShippingStateCode'));
+        m.put('shippingPostalCode', acc.get('ShippingPostalCode'));
+        m.put('shippingCountry', acc.get('ShippingCountry'));
+        m.put('description', acc.get('Description'));
+        Object cd = acc.get('CreatedDate');
+        m.put('createdDate', cd != null ? ((Datetime)cd).formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'') : null);
+        Object lmd = acc.get('LastModifiedDate');
+        m.put('lastModifiedDate', lmd != null ? ((Datetime)lmd).formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'') : null);
+        m.put('createdById', acc.get('CreatedById'));
         return m;
     }
 }

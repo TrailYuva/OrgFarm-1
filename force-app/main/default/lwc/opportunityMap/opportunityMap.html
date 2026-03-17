@@ -1,0 +1,42 @@
+<template>
+    <div class="slds-p-around_medium">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <lightning-input
+                    label="Search Address"
+                    value={searchAddress}
+                    onchange={handleAddressChange}
+                    placeholder="Enter address, e.g., Chennai"
+                ></lightning-input>
+            </div>
+            <div class="slds-col">
+                <lightning-button
+                    label="Search"
+                    onclick={handleSearch}
+                    variant="brand"
+                ></lightning-button>
+            </div>
+        </div>
+        <div class="slds-m-top_medium">
+            <lightning-map
+                map-markers={mapMarkers}
+                center={center}
+                zoom-level={zoomLevel}
+                markers-title="Opportunities"
+                onclick={handleMarkerClick}
+            ></lightning-map>
+        </div>
+        <template if:true={selectedOpportunity}>
+            <div class="slds-m-top_medium">
+                <lightning-card title="Opportunity Details">
+                    <p class="slds-p-horizontal_small">
+                        <strong>Name:</strong> {selectedOpportunity.Name}
+                    </p>
+                    <p class="slds-p-horizontal_small">
+                        <strong>Address:</strong> {selectedOpportunity.BillingStreet}, {selectedOpportunity.BillingCity}, {selectedOpportunity.BillingState} {selectedOpportunity.BillingPostalCode}, {selectedOpportunity.BillingCountry}
+                    </p>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+</template>
