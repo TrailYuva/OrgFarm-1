@@ -4,4 +4,9 @@ public with sharing class OpportunityMapController {
         String query = 'SELECT Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude FROM Opportunity WHERE DISTANCE(BillingAddress, GEOLOCATION(:lat, :lng), \'km\') < :radiusKm AND BillingLatitude != null AND BillingLongitude != null';
         return Database.query(query);
     }
+
+    @AuraEnabled(cacheable=true)
+    public static String getGoogleMapsApiKey() {
+        return System.Label.GoogleMapsApiKey;
+    }
 }

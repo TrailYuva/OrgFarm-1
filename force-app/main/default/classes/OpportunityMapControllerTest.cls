@@ -45,12 +45,12 @@ public class OpportunityMapControllerTest {
     }
 
     @isTest
-    static void testGetOpportunitiesWithinRadius_Bulk() {
-        // Test with more data if needed, but setup has 5
+    static void testGetGoogleMapsApiKey() {
         Test.startTest();
-        List<Opportunity> result = OpportunityMapController.getOpportunitiesWithinRadius(13.0827, 80.2707, 100);
+        String apiKey = OpportunityMapController.getGoogleMapsApiKey();
         Test.stopTest();
 
-        System.assert(result.size() >= 5, 'Should return all test opportunities');
+        System.assertNotEquals(null, apiKey, 'API key should not be null');
+        System.assertNotEquals('', apiKey, 'API key should not be empty');
     }
 }

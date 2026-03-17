@@ -18,6 +18,9 @@
             </div>
         </div>
         <div class="slds-m-top_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading opportunities..." size="medium"></lightning-spinner>
+            </template>
             <lightning-map
                 map-markers={mapMarkers}
                 center={center}
