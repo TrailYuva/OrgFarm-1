@@ -1,7 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getOpportunitiesWithinRadius from '@salesforce/apex/OpportunityMapController.getOpportunitiesWithinRadius';
-import getGoogleMapsApiKey from '@salesforce/apex/OpportunityMapController.getGoogleMapsApiKey';
+import getOpportunitiesByAddress from '@salesforce/apex/OpportunityMapController.getOpportunitiesByAddress';
 
 export default class OpportunityMap extends LightningElement {
     @track searchAddress = '';
@@ -11,20 +10,7 @@ export default class OpportunityMap extends LightningElement {
     @track selectedOpportunity = null;
     @track opportunities = [];
     @track isLoading = false;
-    googleMapsApiKey = '';
     radius = 7; // km
-
-    connectedCallback() {
-        this.loadGoogleMapsApiKey();
-    }
-
-    async loadGoogleMapsApiKey() {
-        try {
-            this.googleMapsApiKey = await getGoogleMapsApiKey();
-        } catch (error) {
-            console.error('Error loading API key:', error);
-        }
-    }
 
     handleAddressChange(event) {
         this.searchAddress = event.target.value;
@@ -37,35 +23,29 @@ export default class OpportunityMap extends LightningElement {
 
         this.isLoading = true;
         try {
-            // Geocode the address to get lat/lng
-            const location = await this.geocodeAddress(this.searchAddress);
-            if (!location) {
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Geocoding Error',
-                    message: 'Unable to find the location for the entered address.',
-                    variant: 'error'
-                }));
-                return;
-            }
-
-            this.center = { latitude: location.lat, longitude: location.lng };
-            this.zoomLevel = 10;
-
-            // Query opportunities within radius
-            this.opportunities = await getOpportunitiesWithinRadius({
-                lat: location.lat,
-                lng: location.lng,
+            // Query opportunities based on the entered address and radius
+            this.opportunities = await getOpportunitiesByAddress({
+                searchTerm: this.searchAddress,
                 radiusKm: this.radius
             });
+
+            if (this.opportunities && this.opportunities.length) {
+                const firstOpp = this.opportunities[0];
+                this.center = {
+                    latitude: firstOpp.Account.BillingLatitude,
+                    longitude: firstOpp.Account.BillingLongitude
+                };
+                this.zoomLevel = 10;
+            }
 
             // Create map markers
             this.mapMarkers = this.opportunities.map(opp => ({
                 location: {
-                    Latitude: opp.BillingLatitude,
-                    Longitude: opp.BillingLongitude
+                    Latitude: opp.Account.BillingLatitude,
+                    Longitude: opp.Account.BillingLongitude
                 },
                 title: opp.Name,
-                description: `${opp.BillingStreet}, ${opp.BillingCity}`,
+                description: `${opp.Account.BillingStreet}, ${opp.Account.BillingCity}`,
                 value: opp.Id
             }));
 
@@ -81,20 +61,6 @@ export default class OpportunityMap extends LightningElement {
         } finally {
             this.isLoading = false;
         }
-    }
-
-    async geocodeAddress(address) {
-        try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${this.googleMapsApiKey}`);
-            const data = await response.json();
-            if (data.results && data.results.length > 0) {
-                const loc = data.results[0].geometry.location;
-                return { lat: loc.lat, lng: loc.lng };
-            }
-        } catch (error) {
-            console.error('Geocoding error:', error);
-        }
-        return null;
     }
 
     handleMarkerClick(event) {
